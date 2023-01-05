@@ -1,0 +1,30 @@
+name: Add new issues to the project board and label as new
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  initialize:
+    name: Initialize new issue
+    runs-on: ubuntu-latest
+    steps:
+      - name: get token
+        uses: tibdex/github-app-token@v1
+        id: app_token
+        with:
+          app_id: ${{ secrets.PROJECT_APP_ID }}
+          installation_id: ${{ secrets.PROJECT_INSTALLATION_ID }}
+          private_key: ${{ secrets.PROJECT_PRIVATE_KEY }}
+      - name: add to project board
+        uses: actions/add-to-project@v0.4.0
+        with:
+          project-url: https://github.com/orgs/18F/projects/35
+          github-token: ${{ steps.app_token.outputs.token }}
+      - name: add label
+        uses: christianvuerings/add-labels@v1.1
+        with:
+          labels: new issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
