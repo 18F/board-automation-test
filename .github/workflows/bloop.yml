@@ -23,8 +23,12 @@ jobs:
           project-url: https://github.com/orgs/18F/projects/35
           github-token: ${{ steps.app_token.outputs.token }}
       - name: add label
-        uses: christianvuerings/add-labels@v1.1
+        uses: actions/github-script@9ac08808f993958e9de277fe43a64532a609130e
         with:
-          labels: new issue
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ["new issue"]
+            });
